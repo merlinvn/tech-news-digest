@@ -18,3 +18,4 @@ tech-digest-merged-*.json
 
 # User workspace config (override layer)
 /workspace/
+/.env
