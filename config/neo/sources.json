@@ -980,6 +980,30 @@
       "topics": ["llm", "ai-agent"]
     },
     {
+      "id": "reddit-unsloth",
+      "type": "reddit",
+      "name": "r/unsloth",
+      "subreddit": "Unsloth",
+      "sort": "hot",
+      "limit": 25,
+      "min_score": 50,
+      "enabled": true,
+      "priority": true,
+      "topics": ["llm", "ai-agent"]
+    },
+    {
+      "id": "reddit-stablediffusion",
+      "type": "reddit",
+      "name": "r/StableDiffusion",
+      "subreddit": "StableDiffusion",
+      "sort": "hot",
+      "limit": 25,
+      "min_score": 50,
+      "enabled": true,
+      "priority": true,
+      "topics": ["llm", "ai-agent"]
+    },
+    {
       "id": "reddit-anthropic",
       "type": "reddit",
       "name": "r/Anthropic",
