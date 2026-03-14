@@ -97,16 +97,20 @@ No need to copy the entire file — just include what you want to change.
 All environment variables are optional. The pipeline runs with whatever sources are available.
 
 ```bash
-export GETX_API_KEY="..."      # GetXAPI ($0.001/call) — preferred Twitter backend
-export TWITTERAPI_IO_KEY="..."  # twitterapi.io (~$5/mo) — alternative Twitter backend
-export X_BEARER_TOKEN="..."     # Twitter/X official API — fallback Twitter backend
-export TAVILY_API_KEY="tvly-xxx"  # Tavily Search API (alternative, free 1000/mo)
-export BRAVE_API_KEYS="k1,k2,k3" # Brave Search API keys (comma-separated, rotation)
-export BRAVE_API_KEY="..."       # Fallback: single Brave key
-export GITHUB_TOKEN="..."       # GitHub API — higher rate limits (auto-generated from GitHub App if unset)
-export TWITTER_API_BACKEND="auto" # auto|getxapi|twitterapiio|official (default: auto)
-export BRAVE_PLAN="free"         # Override Brave rate limit detection: free|pro
-export WEB_SEARCH_BACKEND="auto" # auto|brave|tavily (default: auto)
+# Twitter/X Backend (auto priority: getxapi > twitterapiio > official)
+export GETX_API_KEY="..."        # GetXAPI - $0.001/call (recommended)
+export TWITTERAPI_IO_KEY="..."   # twitterapi.io - ~$5/month (alternative)
+export X_BEARER_TOKEN="..."      # Official X API v2 - fallback
+export TWITTER_API_BACKEND="auto"  # auto|getxapi|twitterapiio|official
+# Web Search
+export TAVILY_API_KEY="tvly-xxx"   # Tavily Search API (alternative, free 1000/mo)
+export BRAVE_API_KEYS="k1,k2,k3"   # Brave Search API keys (comma-separated for rotation)
+export BRAVE_API_KEY="..."         # Fallback: single Brave key
+export WEB_SEARCH_BACKEND="auto"   # auto|brave|tavily
+# GitHub
+export GITHUB_TOKEN="..."          # GitHub API - higher rate limits (auto-generated if unset)
+# Other
+export BRAVE_PLAN="free"           # Override Brave rate limit: free|pro
 ```
 
 ## 📦 Dependencies

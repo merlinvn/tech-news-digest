@@ -10,10 +10,11 @@ Usage:
     python3 fetch-twitter.py --backend twitterapiio  # force twitterapi.io backend
 
 Environment:
-    TWITTER_API_BACKEND - Backend selection: "official", "twitterapiio", "getxapi", or "auto" (default: auto)
-    X_BEARER_TOKEN      - Twitter/X API bearer token (for official backend)
-    GETX_API_KEY        - GetXAPI API key (for getxapi backend)
-    TWITTERAPI_IO_KEY   - twitterapi.io API key (for twitterapiio backend)
+    TWITTER_API_BACKEND - Backend selection: "auto" (default), "getxapi", "twitterapiio", or "official"
+                        Auto priority: getxapi ($0.001/call) > twitterapi.io (~$5/mo) > official X API
+    GETX_API_KEY        - GetXAPI API key (preferred backend, $0.001 per call)
+    TWITTERAPI_IO_KEY   - twitterapi.io API key (alternative backend, ~$5/month)
+    X_BEARER_TOKEN      - Twitter/X official API v2 bearer token (fallback)
 """
 
 import json
@@ -496,16 +497,37 @@ class GetXApiBackend(TwitterBackend):
     """GetXAPI backend."""
 
     def __init__(self, api_key: str):
+        """Initialize GetXAPI backend with API key validation."""
+        if not api_key or len(api_key) < 10:
+            raise ValueError("Invalid GETX_API_KEY format - expected at least 10 characters")
         self.api_key = api_key
+        self.logger = logging.getLogger("fetch-twitter")
 
-    @staticmethod
-    def _parse_date(date_str: str) -> Optional[datetime]:
-        """Parse GetXAPI date format: 'Tue Dec 10 07:00:30 +0000 2024'."""
-        try:
-            return datetime.strptime(date_str, "%a %b %d %H:%M:%S %z %Y")
-        except (ValueError, TypeError):
-            logging.debug(f"Failed to parse GetXAPI date: {date_str}")
-            return None
+    def _parse_date(self, date_str: str) -> Optional[datetime]:
+        """Parse GetXAPI date string with multiple format support.
+        
+        Supported formats:
+        - 'Tue Dec 10 07:00:30 +0000 2024' (Twitter format)
+        - '2024-12-10T07:00:30+00:00' (ISO 8601)
+        - '2024-12-10 07:00:30' (Simple datetime)
+        """
+        formats = [
+            "%a %b %d %H:%M:%S %z %Y",      # Twitter format
+            "%Y-%m-%dT%H:%M:%S%z",          # ISO 8601
+            "%Y-%m-%d %H:%M:%S",            # Simple datetime
+        ]
+        
+        for fmt in formats:
+            try:
+                dt = datetime.strptime(date_str, fmt)
+                if dt.tzinfo is None:
+                    dt = dt.replace(tzinfo=timezone.utc)
+                return dt
+            except (ValueError, TypeError):
+                continue
+        
+        self.logger.debug(f"Failed to parse date '{date_str}' with all known formats")
+        return None
 
     def _parse_tweets_page(self, tweets: list, handle: str, topics: list, cutoff: datetime) -> list:
         articles = []
@@ -567,23 +589,31 @@ class GetXApiBackend(TwitterBackend):
 
                 has_more = raw.get("has_more", False)
                 next_cursor = raw.get("next_cursor")
+                
+                # Fetch page 2 if more results available (with retry)
                 if has_more and next_cursor and articles:
                     oldest = min(datetime.fromisoformat(a["date"]) for a in articles)
                     if oldest >= cutoff:
-                        try:
-                            page2_url = f"{GETXAPI_BASE}/twitter/user/tweets?{urlencode({'userName': handle, 'cursor': next_cursor})}"
-                            req2 = Request(page2_url, headers=headers)
-                            with urlopen(req2, timeout=TIMEOUT) as resp2:
-                                raw2 = json.loads(resp2.read().decode())
-                            if raw2.get("error"):
-                                raise ValueError(str(raw2["error"])[:100])
-                            articles.extend(self._parse_tweets_page(
-                                raw2.get("tweets", []), handle, topics, cutoff
-                            ))
-                            has_more = raw2.get("has_more", False)
-                        except Exception as e:
-                            logging.warning(f"@{handle}: page 2 failed, keeping page 1 results: {e}")
-                            has_more = False
+                        for page_attempt in range(RETRY_COUNT + 1):
+                            try:
+                                page2_url = f"{GETXAPI_BASE}/twitter/user/tweets?{urlencode({'userName': handle, 'cursor': next_cursor})}"
+                                req2 = Request(page2_url, headers=headers)
+                                with urlopen(req2, timeout=TIMEOUT) as resp2:
+                                    raw2 = json.loads(resp2.read().decode())
+                                if raw2.get("error"):
+                                    raise ValueError(str(raw2["error"])[:100])
+                                articles.extend(self._parse_tweets_page(
+                                    raw2.get("tweets", []), handle, topics, cutoff
+                                ))
+                                has_more = raw2.get("has_more", False)
+                                break  # Success
+                            except Exception as e:
+                                self.logger.warning(f"@{handle}: page 2 attempt {page_attempt + 1} failed: {e}")
+                                if page_attempt < RETRY_COUNT:
+                                    time.sleep(RETRY_DELAY * (2 ** page_attempt))
+                                else:
+                                    self.logger.warning(f"@{handle}: page 2 failed after {RETRY_COUNT} attempts, keeping page 1 results")
+                                    has_more = False
 
                 if has_more and articles:
                     oldest = min(datetime.fromisoformat(a["date"]) for a in articles)

@@ -94,20 +94,20 @@ cp config/defaults/topics.json workspace/config/tech-news-digest-topics.json
 
 ## 🔧 环境变量
 
-所有环境变量均为可选，管道会自动使用可用的数据源。
-
-```bash
-export GETX_API_KEY="..."        # GetXAPI ($0.001/次) — 首选 Twitter 后端
-export TWITTERAPI_IO_KEY="..."    # twitterapi.io (~$5/月) — 备选 Twitter 后端
-export X_BEARER_TOKEN="..."       # Twitter/X 官方 API — 兜底 Twitter 后端
-export TWITTER_API_BACKEND="auto" # auto|getxapi|twitterapiio|official（默认: auto）
-export TAVILY_API_KEY="tvly-xxx"  # Tavily Search API（替代方案，免费 1000 次/月）
-export BRAVE_API_KEYS="k1,k2,k3" # Brave Search API 密钥（逗号分隔，自动轮换）
-export BRAVE_API_KEY="..."        # 单密钥回退
-export BRAVE_PLAN="free"          # 覆盖速率限制检测: free|pro
-export WEB_SEARCH_BACKEND="auto" # auto|brave|tavily（默认: auto）
-export GITHUB_TOKEN="..."         # GitHub API — 提高速率限制（未设置时自动从 GitHub App 生成）
-```
+# Twitter/X 后端（自动优先级：getxapi > twitterapiio > official）
+export GETX_API_KEY="..."        # GetXAPI - 0.001 美元/次（推荐）
+export TWITTERAPI_IO_KEY="..."   # twitterapi.io - 约 5 美元/月（备选）
+export X_BEARER_TOKEN="..."      # Twitter/X 官方 API v2 - 兜底
+export TWITTER_API_BACKEND="auto"  # auto|getxapi|twitterapiio|official
+# 网页搜索
+export TAVILY_API_KEY="tvly-xxx"   # Tavily Search API（免费 1000 次/月）
+export BRAVE_API_KEYS="k1,k2,k3"   # Brave Search API 密钥（逗号分隔用于轮换）
+export BRAVE_API_KEY="..."         # 备选：单个密钥
+export WEB_SEARCH_BACKEND="auto"   # auto|brave|tavily
+# GitHub
+export GITHUB_TOKEN="..."          # GitHub API - 更高速率限制（未设置时自动生成）
+# 其他
+export BRAVE_PLAN="free"           # 覆盖速率限制检测：free|pro
 
 ## 📦 依赖
 
