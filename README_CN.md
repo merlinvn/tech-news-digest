@@ -95,17 +95,17 @@ cp config/defaults/topics.json workspace/config/tech-news-digest-topics.json
 ## 🔧 环境变量
 
 # Twitter/X 后端（自动优先级：getxapi > twitterapiio > official）
-export GETX_API_KEY="..."        # GetXAPI - 0.001 美元/次（推荐）
-export TWITTERAPI_IO_KEY="..."   # twitterapi.io - 约 5 美元/月（备选）
-export X_BEARER_TOKEN="..."      # Twitter/X 官方 API v2 - 兜底
+export GETX_API_KEY="..."        # GetXAPI
+export TWITTERAPI_IO_KEY="..."   # twitterapi.io
+export X_BEARER_TOKEN="..."      # Twitter/X 官方 API v2
 export TWITTER_API_BACKEND="auto"  # auto|getxapi|twitterapiio|official
 # 网页搜索
-export TAVILY_API_KEY="tvly-xxx"   # Tavily Search API（免费 1000 次/月）
+export TAVILY_API_KEY="tvly-xxx"   # Tavily Search API
 export BRAVE_API_KEYS="k1,k2,k3"   # Brave Search API 密钥（逗号分隔用于轮换）
-export BRAVE_API_KEY="..."         # 备选：单个密钥
+export BRAVE_API_KEY="..."         # 单个密钥
 export WEB_SEARCH_BACKEND="auto"   # auto|brave|tavily
 # GitHub
-export GITHUB_TOKEN="..."          # GitHub API - 更高速率限制（未设置时自动生成）
+export GITHUB_TOKEN="..."          # GitHub API
 # 其他
 export BRAVE_PLAN="free"           # 覆盖速率限制检测：free|pro
 

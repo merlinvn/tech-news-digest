@@ -98,17 +98,17 @@ All environment variables are optional. The pipeline runs with whatever sources 
 
 ```bash
 # Twitter/X Backend (auto priority: getxapi > twitterapiio > official)
-export GETX_API_KEY="..."        # GetXAPI - $0.001/call (recommended)
-export TWITTERAPI_IO_KEY="..."   # twitterapi.io - ~$5/month (alternative)
-export X_BEARER_TOKEN="..."      # Official X API v2 - fallback
+export GETX_API_KEY="..."        # GetXAPI
+export TWITTERAPI_IO_KEY="..."   # twitterapi.io
+export X_BEARER_TOKEN="..."      # Official X API v2
 export TWITTER_API_BACKEND="auto"  # auto|getxapi|twitterapiio|official
 # Web Search
-export TAVILY_API_KEY="tvly-xxx"   # Tavily Search API (alternative, free 1000/mo)
+export TAVILY_API_KEY="tvly-xxx"   # Tavily Search API
 export BRAVE_API_KEYS="k1,k2,k3"   # Brave Search API keys (comma-separated for rotation)
-export BRAVE_API_KEY="..."         # Fallback: single Brave key
+export BRAVE_API_KEY="..."         # Single Brave key
 export WEB_SEARCH_BACKEND="auto"   # auto|brave|tavily
 # GitHub
-export GITHUB_TOKEN="..."          # GitHub API - higher rate limits (auto-generated if unset)
+export GITHUB_TOKEN="..."          # GitHub API
 # Other
 export BRAVE_PLAN="free"           # Override Brave rate limit: free|pro
 ```
