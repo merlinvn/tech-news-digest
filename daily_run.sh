@@ -26,6 +26,11 @@ mkdir -p "$FINAL_DIR"
 
 python3 scripts/run-pipeline.py --hours 24 --freshness pd --default ./config/neo --archive-dir "$ARCHIVE_DIR" --verbose --enrich
 
+python3 scripts/summarize-merged.py \
+  --input /tmp/td-merged.json \
+  --top 10 \
+  >"$ARCHIVE_DIR/daily-${TODAY}.md"
+
 python3 scripts/summarize-merged-json.py \
   --input /tmp/td-merged.json \
   --top 10 \
