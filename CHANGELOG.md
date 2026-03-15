@@ -1,5 +1,36 @@
 # Changelog
 
+## v3.15.0 — 2026-03-15
+
+### Added
+- **GetXAPI backend** for Twitter/X — new third-party API option with Bearer auth
+  - Auto-select priority: getxapi > twitterapiio > official
+  - New env var: `GETX_API_KEY`
+  - Multi-format date parsing (Twitter, ISO 8601, simple datetime)
+  - Page 2 retry logic for pagination
+  - API key format validation
+- Cross-topic deduplication — each article now appears in only ONE topic
+  (highest priority wins: llm > ai_agent > crypto > github > trending)
+- New test: `test_cross_topic_deduplication`
+
+### Fixed
+- **RSS cache thread safety** — added `threading.RLock()` and `global` declarations
+  - Fixes `UnboundLocalError` on Python 3.13+ (#7)
+  - Fixes potential deadlock from nested lock acquisition
+- Title similarity threshold lowered (0.85 → 0.75) to catch more near-duplicates
+- Previous digest penalty window extended (7 → 14 days)
+
+### Changed
+- Environment variables documentation reorganized with clear sections
+  (Twitter, Web Search, GitHub, Other)
+- Removed subjective pricing/recommendation comments from env var docs
+- `run-pipeline.py` docstring updated: 5 steps → 6 steps
+
+### Docs
+- Added Dependencies section to README (core + optional)
+- README_CN synced with English README
+- Moved Dependencies section after Environment Variables
+
 ## v3.14.0 — 2026-03-02
 
 ### Changed
