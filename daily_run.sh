@@ -36,12 +36,20 @@ python3 scripts/summarize-merged-json.py \
   --top 10 \
   --output "$ARCHIVE_DIR/daily-${TODAY}.json"
 
+# (
+#   sed "s/{{DATE}}/${TODAY}/g" prompts/newsletter_prompt.txt
+#   echo ""
+#   echo "JSON data:"
+#   cat "$ARCHIVE_DIR/daily-${TODAY}.json"
+# ) | gemini -m gemini-3-flash-preview \
+#   >"$FINAL_DIR/newsletter-${TODAY}.md"
+
 (
   sed "s/{{DATE}}/${TODAY}/g" prompts/newsletter_prompt.txt
   echo ""
   echo "JSON data:"
   cat "$ARCHIVE_DIR/daily-${TODAY}.json"
-) | gemini -m gemini-3-flash-preview \
+) | claude --bare -p \
   >"$FINAL_DIR/newsletter-${TODAY}.md"
 
 curl -f -X POST "$N8N_WEBHOOK_URL" \
