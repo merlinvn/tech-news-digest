@@ -1,5 +1,22 @@
 # Changelog
 
+## v3.16.0 — 2026-03-26
+
+### Added
+- **YouTube data layer** — 16 YouTube channels via RSS (Andrej Karpathy, AI Explained,
+  Fireship, Bankless, Lex Fridman, etc.). Zero extra dependencies.
+- `--only` flag for `run-pipeline.py` — run specific steps only (e.g. `--only rss,github`)
+- `--debug` flag for `run-pipeline.py` — preserve intermediate fetch outputs for inspection
+- **Brave Search key rotation on error** — auto-switch to next key on 429/errors during search
+- `--defaults` auto-detection — no longer required, defaults to `<script>/../config/defaults`
+
+### Fixed
+- Disabled broken RSS sources: bankless-rss (SSL cert), rachelbythebay-rss (timeout)
+
+### Stats
+- Total sources: 167 (165 enabled)
+- RSS: 78 (62 original + 16 YouTube), Twitter: 48, GitHub: 28, Reddit: 13
+
 ## v3.15.0 — 2026-03-15
 
 ### Added
