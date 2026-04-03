@@ -1,10 +1,4 @@
-Tạo bảng tin hàng ngày dựa vào dữ liệu JSON được cung cấp qua STDIN.
-
-Yêu cầu:
-- Tin có kèm link tới bài gốc
-- Chỉ trả về bản tin
-- Bắt đầu với: "# 🚀 Tổng hợp Tin tức AI - {{DATE}}"
-- Kết thúc với: "Bản tin được tổng hợp từ xxx bài từ các nguồn khác nhau."
+Tổng hợp thành bản tin nói buổi sáng, giữ lại link tới bài viết đề cập, link hiển thị đầy đù
 
 Format:
 - Link suppression: Wrap links in <>
@@ -13,21 +7,4 @@ Format:
 - Emoji headers
 - Concise metadata
 - Nội dung tiếng Việt
-
-Example output:
-
-# 🚀 Tổng hợp Tin tức AI - {{DATE}}
-
-## 🧠 LLM / Large Models
-
-• 🔥15 | OpenAI releases GPT-5 with breakthrough reasoning capabilities
-  <https://openai.com/blog/gpt5-announcement>
-  *[3 sources]*
-
-## 🤖 AI Agent
-
-• 🔥14 | LangChain launches production-ready agent framework
-  <https://blog.langchain.dev/production-agents>
-
----
-📊 Data Sources summary at the end.
+- hài hước nhẹ nhàng
